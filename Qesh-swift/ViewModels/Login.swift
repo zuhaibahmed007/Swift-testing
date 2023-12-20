@@ -13,7 +13,7 @@ struct LoginView: View {
     @Binding var isLoggedIn : Bool
     
     @State private var email: String = ""
-    @State private var password: Number = ""
+    @State private var password: String = ""
     
     
     
