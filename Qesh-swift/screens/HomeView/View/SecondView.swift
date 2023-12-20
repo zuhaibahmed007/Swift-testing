@@ -26,8 +26,7 @@ struct SecondView: View {
     
     var user : [String]? = []
     
-    
-    
+    private var viewModel = HomeViewModel()
     
     var body: some View {
         NavigationStack {
@@ -37,8 +36,10 @@ struct SecondView: View {
             }
             VStack {
                 PrimaryButton(text: "Get Data", callBack: {
-                    getData()
+                    viewModel.getData()
                 })
+                
+                
 //                Button(action: getData) {
 //                    Label("Choose video", systemImage: "photo.fill")
 //                }
@@ -61,26 +62,33 @@ struct SecondView: View {
 //                            player.pause()
 //                        }
 //                }
+            }.onAppear{
+                configuration()
             }
+            
         }
+    }
+}
+
+extension SecondView {
+    func configuration() {
+        eventObserver()
     }
     
-    func getData (){
-        APIManager.shared.makeApiRequest(method: .get, path: "todos/1") { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let user  = try JSONDecoder().decode(User.self, from: data)
-                    print("USER : --->", user)
-                }catch{
-                    print("Error: --->", error)
-                }
-            case .failure(let error) :
-                print("Error ->", error)
+    func eventObserver() {
+        viewModel.eventHandler = { event in
+            switch event{
+            case .loading:
+                print("LOADING START")
+            case .stopLoading:
+                print("LOADING STOP")
+            case .success:
+                print(viewModel.posts)
+            case .error(let error):
+                print("ERROR VIEW \(String(describing: error))")
             }
         }
     }
-
 }
 
 //struct VideoPicker: UIViewControllerRepresentable {
@@ -141,8 +149,8 @@ struct SecondView: View {
 //    }
 //}
 
-#if DEBUG
-#Preview{
-    SecondView()
-}
-#endif
+//#if DEBUG
+//#Preview{
+//    SecondView()
+//}
+//#endif

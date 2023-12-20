@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct Qesh_swiftApp: App {
+    @State private var isLoggedIn = true
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if isLoggedIn {
+                SecondView()
+            } else {
+                WellcomeView(isLoggedIn: $isLoggedIn)
+            }
         }
     }
 }
